@@ -1,0 +1,291 @@
+---
+title: "廣義線性模型（GLM）分析報告"
+date: today
+author: ""
+toc: true
+number-sections: true
+execute:
+  cache: true # 緩存；換資料後請加 --cache-refresh 重新執行
+format:
+  pdf:
+    pdf-engine: xelatex
+    documentclass: article
+    geometry: "left=2cm, right=2cm, top=2cm, bottom=2cm, a4paper"
+    fontsize: 12pt
+    header-includes:
+      - \usepackage{xeCJK}
+      - \IfFontExistsTF{Microsoft JhengHei UI}{\setCJKmainfont{Microsoft JhengHei UI}}{\IfFontExistsTF{PingFang TC}{\setCJKmainfont{PingFang TC}}{\setCJKmainfont{Noto Sans CJK TC}}}
+      - \usepackage{caption}
+      - \usepackage{float}
+      - \usepackage{placeins} # 控制圖片浮動
+      - \captionsetup[figure]{font=small} # 調整圖片
+      - \captionsetup[table]{font=small}
+      - \usepackage{setspace,relsize}
+      - \usepackage{geometry}
+      - \geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+  html:
+    embed-resources: true
+    code-fold: true
+    toc-depth: 3
+  docx: default
+---
+
+<!--
+使用說明（複製這份範本後可以刪掉這段註解）：
+1. 一份 qmd 可以輸出多種格式：quarto render report.qmd --to pdf（或 html、docx）。
+   只要其中一種時，可以把 YAML 裡不需要的 format 區塊刪掉。
+2. 把 load-data 區塊換成實際資料，並把 y / x1 / x2 換成實際變數名稱。
+3. 圖表的標題與編號：chunk 開頭用 #| label: fig-xxx（表格用 tbl-xxx）搭配 #| fig-cap: / #| tbl-cap:，
+   內文用 @fig-xxx、@tbl-xxx 就能自動編號並交叉引用。
+4. 除了最上面 YAML 的 --- 之外，不要再用 --- 當分隔線。
+5. 表格一律用 knitr::kable()，不要加 kable_styling()。
+6. PDF 的中文字型會依序嘗試 Microsoft JhengHei UI、PingFang TC、Noto Sans CJK TC。
+-->
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false # setup 區塊不快取，否則套件與設定不會重新載入
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center" # 程式輸出圖片置中
+)
+library(MASS)
+library(car)
+library(ggplot2)
+library(dplyr)
+library(performance)
+library(broom)
+library(knitr)
+library(splines)
+
+# 圖片中文字型：依作業系統自動尋找，找不到就用預設字型
+font_candidates <- c(
+  "C:/Windows/Fonts/msjh.ttc", # Windows
+  "/System/Library/Fonts/PingFang.ttc", # macOS
+  "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc" # Linux
+)
+font_file <- font_candidates[file.exists(font_candidates)][1]
+if (requireNamespace("showtext", quietly = TRUE) && !is.na(font_file)) {
+  sysfonts::font_add("cjk_font", font_file) # font_add 屬於 sysfonts 套件（showtext 的相依套件）
+  showtext::showtext_auto()
+  knitr::opts_chunk$set(fig.showtext = TRUE) # 讓圖片中文正確顯示
+  theme_set(theme_minimal(base_family = "cjk_font"))
+} else {
+  # 沒有 showtext 或找不到字型時，改用 png 裝置（PDF 輸出時 pdf 裝置無法顯示中文）
+  knitr::opts_chunk$set(dev = "png", dpi = 150)
+  theme_set(theme_minimal())
+}
+```
+
+```{r}
+#| label: load-data
+#| cache: false # 資料每次都重新讀取
+# 請換成實際資料，例如：
+dat <- read.csv("your_data.csv")
+```
+
+# 變數清單與 X / Y 設定
+
+```{r}
+#| label: tbl-variable-list
+#| tbl-cap: "資料中的所有變數"
+var_tbl <- data.frame(
+  變數名稱 = names(dat),
+  資料型態 = sapply(dat, function(x) class(x)[1]),
+  相異值個數 = sapply(dat, function(x) length(unique(x))),
+  遺漏值個數 = sapply(dat, function(x) sum(is.na(x))),
+  範例值 = sapply(dat, function(x) paste(head(unique(x), 3), collapse = ", ")),
+  row.names = NULL
+)
+kable(var_tbl)
+```
+
+@tbl-variable-list 列出資料中的所有變數。在這裡寫明經使用者確認後的設定：研究目的（解釋關聯／推論因果／建立預測模型）、反應變數（Y）是哪一個、解釋變數（X）有哪些、哪些變數被排除及原因，以及哪些變數可能在結果發生之後才產生（標示並說明處理方式）。使用者若沒說明，必須先詢問再填寫，不可自行假設。
+
+# 探索性資料分析（EDA）
+
+```{r}
+#| label: eda-structure
+str(dat)
+```
+
+```{r}
+#| label: fig-eda-response
+#| fig-cap: "反應變數 Y 的分佈"
+summary(dat$y)
+ggplot(dat, aes(x = y)) +
+  geom_histogram(bins = 30) +
+  labs(x = "y", y = "次數")
+```
+
+```{r}
+#| label: tbl-eda-missing
+#| tbl-cap: "各變數的遺漏值個數"
+kable(data.frame(欄位 = names(dat), 遺漏值數 = colSums(is.na(dat)), row.names = NULL))
+```
+
+在這裡用文字說明：資料筆數、反應變數大致的分佈型態（@fig-eda-response）、有沒有遺漏值需要處理（@tbl-eda-missing）、解釋變數跟 Y 大致的關係方向。
+
+# 適合性評估：選擇分佈家族與連結函數
+
+在這裡用文字說明反應變數的型態（二元／計數／連續正值右偏／連續對稱），並依此決定 family 與 link，講清楚選擇的理由（可參考 skill 的 `family-link-selection.md` 判斷邏輯）。
+
+# 模型配適
+
+## 連續變數的函數形式
+
+每一個連續解釋變數都要檢查（不是只檢查其中一兩個）。分組趨勢圖只是線索，不能只憑它決定轉換方式，還要比較不同函數形式的 AIC、BIC 與概似比檢定。
+
+```{r}
+#| label: tbl-functional-form
+#| tbl-cap: "x1 不同函數形式的比較"
+# 依實際的連續變數與 family 修改；每個連續變數都要做一次
+f_lin <- glm(y ~ x1 + x2, family = poisson(link = "log"), data = dat)
+f_poly <- update(f_lin, . ~ . - x1 + poly(x1, 2))
+f_spl <- update(f_lin, . ~ . - x1 + ns(x1, df = 3))
+kable(data.frame(
+  函數形式 = c("線性", "二次多項式", "樣條 df=3"),
+  AIC = AIC(f_lin, f_poly, f_spl)$AIC,
+  BIC = BIC(f_lin, f_poly, f_spl)$BIC
+), digits = 1)
+```
+
+在這裡說明各連續變數的函數形式檢查結果（@tbl-functional-form），以及最後採用的形式與理由。
+
+## 候選模型比較
+
+先寫明事前講好的選模原則（例如巢狀模型用概似比檢定、非巢狀用 AIC／BIC、差距很小時選較簡單的、函數形式要合理）。
+
+```{r}
+#| label: tbl-model-compare
+#| tbl-cap: "候選模型比較"
+m1 <- glm(y ~ x1 + x2, family = poisson(link = "log"), data = dat)
+m2 <- glm(y ~ x1, family = poisson(link = "log"), data = dat)
+ms <- list(m1 = m1, m2 = m2)
+cmp <- data.frame(
+  模型 = names(ms),
+  觀測數 = sapply(ms, nobs), # 候選模型必須使用相同的分析樣本才能比較 AIC、BIC 與 LRT
+  參數個數 = sapply(ms, function(m) length(coef(m))),
+  收斂 = sapply(ms, function(m) isTRUE(m$converged)),
+  AIC = sapply(ms, AIC),
+  BIC = sapply(ms, BIC),
+  殘差偏差 = sapply(ms, deviance),
+  row.names = NULL
+)
+kable(cmp, digits = 1)
+anova(m2, m1, test = "Chisq") # 只用於巢狀模型
+```
+
+在這裡依事前選模原則說明比較結果（@tbl-model-compare）：LRT 只看巢狀模型，AIC／BIC 在相同分析樣本下比較，並與殘差診斷、研究合理性分開看。另外要說明估計是否成功（收斂、有無完全分離、係數與標準誤是否異常）、模型實際使用的樣本數與因缺失被排除的筆數，並寫明最終模型是哪一個、為什麼選它。若選擇較簡單但配適較差的模型，要說明簡化的目的與配適限制，不可因為係數較容易解釋就忽略配適不足。
+
+## 最終模型
+
+```{r}
+#| label: fit-model
+# 最終模型：由上一節的比較結果決定，之後的解釋、診斷、結論都以它為準
+model <- m1
+summary(model)
+```
+
+```{r}
+#| label: tbl-coef
+#| tbl-cap: "最終模型的係數估計（已轉換為 rate ratio / odds ratio，視 link 而定）"
+td <- tidy(model, conf.int = TRUE, exponentiate = TRUE)
+kable(td, digits = 3)
+```
+
+在這裡逐一解釋 @tbl-coef 中每個係數的實質意義（記得依 link function 轉換後再解釋，不要直接唸 link scale 上的原始係數；研究目的是解釋關聯時，措辭用「關聯」而不是因果）。
+
+# 模型診斷與評估
+
+```{r}
+#| label: diagnostics-overdispersion
+check_overdispersion(model)
+```
+
+```{r}
+#| label: diagnostics-vif
+vif(model)
+```
+
+```{r}
+#| label: fig-diagnostics-residuals
+#| fig-cap: "Deviance residuals 與 fitted values"
+dat$resid <- residuals(model, type = "deviance")
+dat$fitted <- fitted(model)
+ggplot(dat, aes(fitted, resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(x = "Fitted", y = "Deviance residual")
+```
+
+```{r}
+#| label: fig-diagnostics-overview
+#| fig-cap: "模型診斷四合一圖"
+#| fig-height: 8
+#| fig-width: 8
+# base R 內建的四合一診斷圖（不需要額外套件），比 performance::check_model() 更保險
+par(mfrow = c(2, 2))
+plot(model)
+```
+
+在這裡總結診斷結果（@fig-diagnostics-residuals、@fig-diagnostics-overview）：先前選的 family/link 站不站得住腳、有沒有過度離散或共線性問題、如果有問題後續怎麼調整。
+
+## 樣本外預測評估
+
+模型診斷檢查假設與配適問題，不能取代預測評估。診斷通過不等於預測能力良好。研究目的是預測時這一節必做；其他目的時視需要補做。所有候選模型要用相同的折才公平。
+
+```{r}
+#| label: tbl-cv
+#| tbl-cap: "5 折交叉驗證的樣本外預測表現（彙整所有折的預測後計算，候選模型使用相同的折）"
+# 計數／連續 Y；二元 Y 請改用 AUC、Brier score 與校準（見 references/model-building-and-validation.md）
+# 若分析流程含插補、標準化等前處理，必須在每一折內只用訓練資料估計
+make_folds <- function(y, k = 5, seed = 1) {
+  set.seed(seed)
+  fold <- integer(length(y))
+  if (all(y %in% c(0, 1))) { # 二元資料分層切分，確保每一折都有兩個類別
+    for (v in c(0, 1)) {
+      idx <- which(y == v)
+      fold[idx] <- sample(rep(1:k, length.out = length(idx)))
+    }
+  } else fold <- sample(rep(1:k, length.out = length(y)))
+  fold
+}
+cv_oof <- function(formula, data, family, fold) {
+  k <- max(fold)
+  oof <- rep(NA_real_, nrow(data))
+  failed <- 0
+  for (i in 1:k) {
+    tr <- data[fold != i, , drop = FALSE]
+    te <- data[fold == i, , drop = FALSE]
+    m <- tryCatch(glm(formula, family = family, data = tr),
+                  warning = function(w) NULL, error = function(e) NULL)
+    if (is.null(m) || !isTRUE(m$converged)) { failed <- failed + 1; next }
+    p <- tryCatch(predict(m, newdata = te, type = "response"), error = function(e) NULL)
+    if (is.null(p)) { failed <- failed + 1; next }
+    oof[fold == i] <- p
+  }
+  list(pred = oof, failed_folds = failed)
+}
+cv_metrics <- function(y, mu, family) {
+  ok <- !is.na(mu)
+  c(平均偏差 = mean(family$dev.resids(y[ok], mu[ok], rep(1, sum(ok)))),
+    RMSE = sqrt(mean((y[ok] - mu[ok])^2)), MAE = mean(abs(y[ok] - mu[ok])))
+}
+fold <- make_folds(dat$y)
+r1 <- cv_oof(formula(m1), dat, poisson(link = "log"), fold)
+r2 <- cv_oof(formula(m2), dat, poisson(link = "log"), fold)
+cv_tbl <- rbind(m1 = cv_metrics(dat$y, r1$pred, poisson()),
+                m2 = cv_metrics(dat$y, r2$pred, poisson()))
+cv_tbl <- cbind(cv_tbl, 失敗折數 = c(r1$failed_folds, r2$failed_folds))
+kable(cv_tbl, digits = 3)
+```
+
+在這裡說明樣本外預測表現（@tbl-cv），並與樣本內的配適結果比較。
+
+# 結論
+
+結論的所有估計值、診斷結果與預測指標，都必須來自最終模型。若最終模型是 m1，就以 m1 的估計（@tbl-coef）為主要結論；若保留較簡單的模型，要清楚說明簡化的目的與配適限制。不要混用不同模型的結果而不交代，引用其他模型的數字時要標明是哪個模型、為什麼引用。在這裡給出最終結論與建議，並回頭檢查文中每個數字是否都對應到最終模型的輸出。
+
