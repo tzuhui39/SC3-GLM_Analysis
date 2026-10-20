@@ -1600,59 +1600,112 @@ R26144063李姿慧
 </ul></li>
 </ul>
 </section>
-<section id="現在的-skill-怎麼運作一資料準備" class="slide level2">
-<h2>現在的 Skill 怎麼運作？（一）資料準備</h2>
+<section id="現在的-skill-怎麼運作" class="slide level2">
+<h2>現在的 Skill 怎麼運作？</h2>
 <style>
-.flow { display: grid; grid-template-columns: 1.25fr 0.35fr 1fr; gap: 4px 12px; align-items: center; margin-top: 6px; }
-.node { border: 3px solid #2a76dd; border-radius: 12px; padding: 8px 16px; background: #eef5ff; text-align: center; line-height: 1.3; }
-.node b { font-size: 27px; display: block; }
-.node span { font-size: 20px; color: #333; display: block; }
+.fl { font-size: 20px; }
+.usage { font-size: 21px; color: #555; margin-bottom: 8px; }
+.trunk { width: 66%; margin: 0 auto; }
+.node { border: 3px solid #2a76dd; border-radius: 12px; padding: 8px 14px; background: #eef5ff; text-align: center; line-height: 1.3; }
+.node b { font-size: 26px; display: block; }
+.node span { font-size: 19px; color: #333; display: block; }
 .node.side { border-color: #e08a00; background: #fff4df; }
+.node.side b { font-size: 22px; }
+.node.dec { border-color: #7a3fbf; background: #f3ecfb; border-style: dashed; }
 .node.out { border-color: #2e9e5b; background: #e9f7ee; }
-.down { text-align: center; font-size: 20px; color: #444; line-height: 1.1; }
-.down::before { content: "▼"; display: block; font-size: 22px; color: #2a76dd; }
-.right { text-align: center; font-size: 18px; color: #a85f00; line-height: 1.2; }
-.right::after { content: "➜"; display: block; font-size: 28px; }
-.loop { font-size: 17px; color: #a85f00; text-align: center; margin-top: 2px; }
-.usage { font-size: 21px; color: #555; margin-bottom: 4px; }
-.row3 { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: center; margin-top: 4px; }
-.harrow { font-size: 30px; color: #2a76dd; }
+.node.note { border-color: #999; background: #f4f4f4; border-style: dotted; }
+.dn { text-align: center; font-size: 18px; color: #444; line-height: 1.15; padding: 2px 0; }
+.dn::before { content: "▼"; display: block; font-size: 20px; color: #2a76dd; }
+.withside { display: grid; grid-template-columns: 1.3fr 0.4fr 1fr; gap: 10px; align-items: center; width: 100%; }
+.rt { text-align: center; font-size: 17px; color: #a85f00; line-height: 1.2; }
+.rt::after { content: "➜"; display: block; font-size: 26px; }
+.loop { font-size: 16px; color: #a85f00; text-align: center; margin-top: 2px; }
+.branches { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 6px; }
+.col { border: 2px solid #ddd; border-radius: 14px; padding: 10px 12px; }
+.tag { text-align: center; font-size: 24px; font-weight: bold; color: #fff; border-radius: 8px; padding: 4px; margin-bottom: 8px; }
+.tag.l { background: #2a76dd; }
+.tag.r { background: #7a3fbf; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.branch-label { text-align: center; font-size: 17px; color: #a85f00; margin: 4px 0 2px; }
+.merge { text-align: center; font-size: 19px; color: #2e9e5b; margin: 10px 0 6px; }
+.merge::before { content: "▼　▼"; display: block; font-size: 22px; }
+.k { width: 66%; margin: 0 auto; }
+.foot { font-size: 17px; color: #666; text-align: center; margin-top: 6px; }
 </style>
-<div class="usage">使用時只要說「我要使用這個資料 去跑glm /glm-analysis」，需要決定的地方都會用勾選框詢問</div>
-<div class="flow">
-  <div class="node"><b>列出所有變數</b><span>勾選：Y、排除變數、研究目的、時間順序、offset、輸出形式</span></div><div></div><div></div>
-  <div class="down"></div><div></div><div></div>
-  <div class="node"><b>EDA</b></div><div></div><div></div>
-  <div class="down"></div><div></div><div></div>
-  <div class="node"><b>資料檢查關卡</b><span>最大最小值、類別、可疑值</span></div>
-  <div class="right">勾選：有問題</div>
-  <div><div class="node side"><b>依指示處理</b><span>重新呈現後再確認</span></div><div class="loop">↺ 回到資料檢查關卡</div></div>
-  <div class="down">勾選：沒問題</div><div></div><div></div>
-  <div class="node"><b>適合性評估</b><span>相依性、offset、分離、樣本數</span></div>
-  <div class="right">不適合或超出範圍</div>
-  <div><div class="node side"><b>勾選</b><span>繼續、換方法或停止</span></div><div class="loop">選「繼續」→ 進入下一步</div></div>
-  <div class="down">適合</div><div></div><div></div>
-  <div class="node out"><b>選擇 family / link</b><span>檢查連續變數的函數形式</span></div><div></div><div></div>
+<div class="fl">
+<div class="usage">使用時只要說「我要使用這個資料 去跑glm /glm-analysis」，需要決定的地方都會用勾選框詢問（內容較長，請往下捲動）</div>
+
+<div class="trunk">
+  <div class="node"><b>列出變數</b><span>勾選確認 X / Y</span></div>
+  <div class="dn"></div>
+  <div class="node"><b>確認研究目的與時間順序</b></div>
+  <div class="dn"></div>
+  <div class="node"><b>EDA</b></div>
+  <div class="dn"></div>
 </div>
-</section>
-<section id="現在的-skill-怎麼運作二建模與輸出" class="slide level2">
-<h2>現在的 Skill 怎麼運作？（二）建模與輸出</h2>
-<div class="flow">
-  <div class="node"><b>配適 m1</b><span>檢查收斂與分離</span></div><div></div><div></div>
-  <div class="down"></div><div></div><div></div>
-  <div class="node"><b>診斷 m1</b><span>殘差、離散、共線性、適合度、零值</span></div>
-  <div class="right">有證據顯示有問題</div>
-  <div><div class="node side"><b>提出 m2</b><span>重新配適</span></div><div class="loop">↺ 回到診斷，比較 m1 與 m2</div></div>
-  <div class="down">沒問題，或 m2 比較後確認</div><div></div><div></div>
-  <div class="node"><b>診斷完成紀錄表</b><span>確認最終模型</span></div><div></div><div></div>
-  <div class="down"></div><div></div><div></div>
+<div class="trunk">
+  <div class="withside">
+    <div class="node"><b>資料檢查關卡</b><span>確認最大最小值、typo</span></div>
+    <div class="rt">有問題</div>
+    <div><div class="node side"><b>修正或排除</b><span>後重新檢查</span></div><div class="loop">↺ 回到資料檢查關卡</div></div>
+  </div>
 </div>
-<div class="row3">
-  <div class="node"><b>樣本外預測評估</b><span>預測目的必做</span></div>
-  <div class="harrow">➜</div>
-  <div class="node"><b>整體檢定、多重比較</b><span>結論逐句檢核</span></div>
-  <div class="harrow">➜</div>
-  <div class="node out"><b>輸出形式</b><span>對話中呈現　或　產出 Quarto 報告</span></div>
+<div class="trunk">
+  <div class="dn">沒問題</div>
+  <div class="node"><b>適合性評估</b><span>獨立性、offset、完全分離</span></div>
+  <div class="dn"></div>
+  <div class="node"><b>選擇 family / link</b><span>檢查連續變數函數形式</span></div>
+  <div class="dn"></div>
+  <div class="node"><b>配適 m1</b><span>解釋係數與信賴區間</span></div>
+  <div class="dn"></div>
+  <div class="node dec"><b>◆ 研究目的是什麼？</b></div>
+  <div class="dn"></div>
+</div>
+
+<div class="branches">
+  <div class="col">
+    <div class="tag l">解釋關聯</div>
+    <div class="node"><b>完整分析樣本</b><span>不切分資料</span></div>
+    <div class="dn"></div>
+    <div class="node"><b>模型診斷</b><span>殘差、過度離散、共線性、適合度、零值</span></div>
+    <div class="branch-label">有問題 ➜</div>
+    <div class="node side"><b>提出 m2 並比較</b></div>
+    <div class="dn">沒問題，或比較後</div>
+    <div class="node"><b>穩健性分析</b><span>替代函數形式、變數、缺失值處理</span></div>
+    <div class="dn"></div>
+    <div class="node out"><b>結論：只描述關聯</b></div>
+    <div class="dn">使用者想預測新資料時</div>
+    <div class="node side"><b>直接用最終模型 predict newdata</b><span>不重新切分、不重新訓練</span></div>
+    <div class="dn"></div>
+    <div class="node note"><b>說明</b><span>未做樣本外驗證；超出資料範圍為外推</span></div>
+  </div>
+  <div class="col">
+    <div class="tag r">預測新資料</div>
+    <div class="node"><b>定義預測目標與使用情境</b><span>連續分數 或 門檻分類</span></div>
+    <div class="dn"></div>
+    <div class="node"><b>建立訓練／驗證流程</b><span>依個人、群集或時間切分；留出獨立測試集</span></div>
+    <div class="dn"></div>
+    <div class="node"><b>模型診斷</b></div>
+    <div class="dn"></div>
+    <div class="node dec"><b>◆ 是否比較其他候選模型？</b><span>勾選框詢問</span></div>
+    <div class="split">
+      <div><div class="dn">否</div><div class="node"><b>m1 與基準模型</b></div></div>
+      <div><div class="dn">是</div><div class="node"><b>事先決定指標</b><span>相同的折比較候選模型</span></div></div>
+    </div>
+    <div class="dn"></div>
+    <div class="node"><b>交叉驗證</b><span>樣本外指標與各折變異、校準</span></div>
+    <div class="dn"></div>
+    <div class="node"><b>獨立測試集評估一次</b></div>
+    <div class="dn"></div>
+    <div class="node out"><b>結論：只說已驗證的用途</b></div>
+  </div>
+</div>
+
+<div class="merge">兩條路線最後都接到</div>
+<div class="k">
+  <div class="node out"><b>輸出形式</b><span>對話 或 Quarto pdf / html / docx</span></div>
+  <div class="foot">輸出形式其實在分析開始前就會問完（最後一題、沒有預設值），放在圖的最後只是方便閱讀</div>
+</div>
 </div>
 </section>
 <section id="與-ai-協作的心得" class="slide level2 scrollable">
