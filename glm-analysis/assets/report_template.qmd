@@ -58,7 +58,6 @@ library(dplyr)
 library(performance)
 library(broom)
 library(knitr)
-library(splines)
 
 # 圖片中文字型：依作業系統自動尋找，找不到就用預設字型
 font_candidates <- c(
@@ -133,23 +132,6 @@ kable(data.frame(欄位 = names(dat), 遺漏值數 = colSums(is.na(dat)), row.na
 在這裡用文字說明反應變數的型態（二元／計數／連續正值右偏／連續對稱），並依此決定 family 與 link，講清楚選擇的理由（可參考 skill 的 `family-link-selection.md` 判斷邏輯）。
 
 # 模型配適
-
-## 連續變數的函數形式
-
-每一個連續解釋變數都要檢查（不是只檢查其中一兩個）。預設只配適一個模型：用分組趨勢圖與領域知識決定形式，沒有明顯非線性證據就用線性。
-
-```{r}
-#| label: fig-functional-form
-#| fig-cap: "x1 與 log 平均反應的分組趨勢（二元 Y 請改用經驗 logit）"
-# 依實際的連續變數修改；每個連續變數都要畫一張
-dat$grp <- cut(dat$x1, quantile(dat$x1, seq(0, 1, .1), na.rm = TRUE), include.lowest = TRUE)
-emp <- dat |> group_by(grp) |> summarise(x_mid = median(x1), mean_y = mean(y), n = n())
-ggplot(emp, aes(x_mid, log(mean_y + 0.5))) +
-  geom_point() + geom_smooth(method = "loess", se = FALSE, formula = y ~ x) +
-  labs(x = "x1", y = "log(平均 y + 0.5)")
-```
-
-在這裡說明各連續變數的函數形式判斷（@fig-functional-form）：沒有明顯非線性就用線性；有明顯證據才改用 `log()`、多項式或樣條並說明理由。分組圖只是線索，不能單獨決定轉換方式。
 
 ## 模型配適
 
@@ -246,7 +228,7 @@ kable(data.frame(
 #| label: tbl-final-check
 #| tbl-cap: "m1 與調整後模型 m2 的診斷與比較"
 #| eval: false
-# m2：診斷發現問題後調整的模型，例如 m2 <- update(m1, . ~ . + ns(x1, df = 3)) 或換 family
+# m2：診斷發現問題後調整的模型，例如換 family 或 link；不要加入非線性項（非線性只在報告中延伸討論）
 cands <- list(m1 = m1, m2 = m2)
 pear_disp <- function(m) sum(residuals(m, type = "pearson")^2) / df.residual(m)
 kable(data.frame(
