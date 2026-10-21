@@ -125,7 +125,11 @@ flowchart TD
 
 分析是用 **R** 跑的。依您使用的環境而定：
 
-- **在 Claude 的雲端環境**：Claude 會先檢查 R 是否存在，沒有就安裝（R、MASS、car、ggplot2、dplyr、performance、knitr、rmarkdown、broom、emmeans，DHARMa 為選用，PDF 另需 Quarto 與 LaTeX 相關套件），您的電腦不需要有 R
+- **在 Claude 的雲端環境**：Claude 會在 Anthropic 雲端為這場對話準備的一個獨立 Linux 工作環境（容器）裡跑 R，您的電腦不需要有 R。這個環境有以下特性：
+  - **每開一次新對話就重置一次**：新對話拿到的是全新的環境，之前裝過的套件、產生的檔案都不會保留，也不會與其他對話共用。所以每次新對話，Claude 都會先檢查 R 是否存在，沒有就安裝（R、MASS、car、ggplot2、dplyr、performance、knitr、rmarkdown、broom、emmeans，DHARMa 為選用，PDF 另需 Quarto 與 LaTeX 相關套件）
+  - **同一場對話內會保留**：同一場對話裡已安裝的套件與產生的檔案會持續存在
+  - **網路受限**：只能連到套件庫等少數網站，無法任意下載外部資料，資料請直接上傳到對話
+  - **結果檔要自己下載**：報告與圖表在對話結束後環境就會被回收，請在對話中下載需要保留的檔案
 - **在自己的電腦（Claude Code 等）**：使用您本機的 R 與 Quarto
 
 若環境完全無法執行 R，Skill 規定必須明說，**不可假裝已經跑過分析**。
