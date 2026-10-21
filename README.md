@@ -130,7 +130,13 @@ flowchart TD
   - **同一場對話內會保留**：同一場對話裡已安裝的套件與產生的檔案會持續存在
   - **網路受限**：只能連到套件庫等少數網站，無法任意下載外部資料，資料請直接上傳到對話
   - **結果檔要自己下載**：報告與圖表在對話結束後環境就會被回收，請在對話中下載需要保留的檔案
-- **在自己的電腦（Claude Code 等）**：使用您本機的 R 與 Quarto
+- **在自己的電腦（Claude Code 等）**：使用您本機的 R 與 Quarto，**不需要 MCP**，只用 Claude Code 內建的讀寫檔案、執行終端機指令與勾選框提問。本機需要符合下列條件：
+  - **終端機能執行指令**：R 與 Quarto 要在系統路徑（PATH）裡，在終端機輸入 `Rscript --version` 與 `quarto --version` 能看到版本
+  - **R 套件**：MASS、car、ggplot2、dplyr、performance、knitr、rmarkdown、broom、emmeans 要裝好；缺少時 Claude 可用 `install.packages()` 補裝（需要網路）。與雲端環境不同，本機的套件裝一次就會一直保留
+  - **輸出 PDF 另外需要**：LaTeX（xelatex）與中文字型（範本依序嘗試微軟正黑體、蘋方、Noto Sans CJK TC）；輸出 HTML 不需要 LaTeX
+  - **權限許可**：Claude Code 執行指令、安裝套件、寫檔案時通常會先詢問，可以在設定中預先允許
+  - **資料位置**：資料要放在 Claude Code 讀得到的資料夾（工作目錄）內
+  - **本機沒有 R**：Claude 無法直接替您裝好就跑；Skill 規定遇到無法執行 R 時必須明說，不可假裝已經跑過分析
 
 若環境完全無法執行 R，Skill 規定必須明說，**不可假裝已經跑過分析**。
 
