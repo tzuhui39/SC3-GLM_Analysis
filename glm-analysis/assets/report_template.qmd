@@ -241,69 +241,9 @@ kable(data.frame(
 # 巢狀模型可加：anova(m1, m2, test = "Chisq")
 ```
 
-## 樣本外預測評估
-
-模型診斷檢查假設與配適問題，不能取代預測評估。診斷通過不等於預測能力良好。本節用來說明模型的預測能力。比較多個模型時要用相同的折才公平。
-
-```{r}
-#| label: tbl-cv
-#| tbl-cap: "5 折交叉驗證的樣本外預測表現（彙整所有折的預測後計算，比較多個模型時使用相同的折）"
-# 計數／連續 Y；二元 Y 請改用 AUC、Brier score 與校準（見 references/model-building-and-validation.md）
-# 若分析流程含插補、標準化等前處理，必須在每一折內只用訓練資料估計
-# 分層（二元）或隨機（其他）切分；少數類別觀測數少於折數時，自動降低折數並提示
-make_folds <- function(y, k = 5, seed = 1) {
-  set.seed(seed)
-  if (all(y %in% c(0, 1))) {
-    n_min <- min(table(y))
-    if (n_min < k) { k <- max(2, n_min); message("少數類別只有 ", n_min, " 筆，折數降為 ", k, "；若仍不足以分折，請說明限制") }
-    fold <- integer(length(y))
-    for (v in c(0, 1)) { idx <- which(y == v); fold[idx] <- sample(rep(1:k, length.out = length(idx))) }
-  } else fold <- sample(rep(1:k, length.out = length(y)))
-  fold
-}
-
-# 回傳樣本外預測與每一折的記錄：警告、錯誤、是否收斂、預測是否成功分別記錄
-# 只有「錯誤、未收斂或預測失敗」才視為該折失敗；只有警告時保留預測並記錄警告內容，由使用者判讀
-cv_oof <- function(formula, data, family = NULL, fold, fitter = glm) {
-  k <- max(fold); oof <- rep(NA_real_, nrow(data))
-  log <- data.frame(折 = 1:k, 錯誤 = "", 警告 = "", 收斂 = NA, 預測成功 = NA)
-  for (i in 1:k) {
-    tr <- data[fold != i, , drop = FALSE]; te <- data[fold == i, , drop = FALSE]
-    w <- character(0)
-    m <- tryCatch(withCallingHandlers(
-      if (is.null(family)) fitter(formula, data = tr) else fitter(formula, family = family, data = tr),
-      warning = function(x) { w <<- c(w, conditionMessage(x)); invokeRestart("muffleWarning") }),
-      error = function(e) { log$錯誤[i] <<- conditionMessage(e); NULL })
-    log$警告[i] <- paste(unique(w), collapse = " | ")
-    if (is.null(m)) { log$預測成功[i] <- FALSE; next }
-    log$收斂[i] <- isTRUE(m$converged)
-    p <- tryCatch(predict(m, newdata = te, type = "response"),
-                  error = function(e) { log$錯誤[i] <<- conditionMessage(e); NULL })
-    log$預測成功[i] <- !is.null(p) && isTRUE(m$converged)
-    if (log$預測成功[i]) oof[fold == i] <- p
-  }
-  list(pred = oof, log = log, failed_folds = sum(!log$預測成功), warned_folds = sum(log$警告 != ""))
-}
-cv_metrics <- function(y, mu, family) {
-  ok <- !is.na(mu)
-  c(平均偏差 = mean(family$dev.resids(y[ok], mu[ok], rep(1, sum(ok)))),
-    RMSE = sqrt(mean((y[ok] - mu[ok])^2)), MAE = mean(abs(y[ok] - mu[ok])))
-}
-fold <- make_folds(dat$y)
-r0 <- cv_oof(y ~ 1, dat, poisson(link = "log"), fold) # 基準模型：只有截距，三列用同一指標比較
-r1 <- cv_oof(formula(m1), dat, poisson(link = "log"), fold)
-cv_tbl <- rbind(基準模型 = cv_metrics(dat$y, r0$pred, poisson()),
-                m1 = cv_metrics(dat$y, r1$pred, poisson()))
-cv_tbl <- cbind(cv_tbl, 失敗折數 = c(r0$failed_folds, r1$failed_folds), 有警告折數 = c(r0$warned_folds, r1$warned_folds))
-# 警告與失敗原因：r1$log（每折的錯誤、警告、是否收斂）
-kable(cv_tbl, digits = 3)
-```
-
-在這裡說明樣本外預測表現（@tbl-cv），模型要贏過只有截距的基準模型才有意義，並與樣本內的配適結果比較。
-
 # 結論
 
-結論的所有估計值、診斷結果與預測指標，都必須來自最終模型。若最終模型是 m1，就以 m1 的估計（@tbl-coef）為主要結論；若診斷後調整為 m2，就以 m2 為準。不要混用不同模型的結果而不交代，引用其他模型的數字時要標明是哪個模型、為什麼引用。在這裡給出最終結論與建議。
+結論的所有估計值與診斷結果，都必須來自最終模型。若最終模型是 m1，就以 m1 的估計（@tbl-coef）為主要結論；若診斷後調整為 m2，就以 m2 為準。不要混用不同模型的結果而不交代，引用其他模型的數字時要標明是哪個模型、為什麼引用。在這裡給出最終結論與建議，並明講診斷通過不等於預測能力良好；若有報告樣本內配適指標（如 pseudo-R²），註明是樣本內、通常偏樂觀。
 
 寫完後逐句檢核：(1) 每個數字是否都來自最終模型？(2) 比較性陳述（較好、最佳、相近）是否有校正多重比較的檢定支持？(3) 有沒有出現因果措辭（本 skill 只描述關聯）？(4)「不顯著」有沒有被寫成「相同」？(5) 整體檢定是否用最終模型重做？內文的數學符號請用 LaTeX（例如 $\mu$、$\theta$），不要直接打 Unicode 符號。
 
