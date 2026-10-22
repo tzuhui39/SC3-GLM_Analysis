@@ -106,6 +106,8 @@ flowchart TD
 
 ### 選項二：產生 Quarto 報告檔
 
+**預設交付**：除了轉出的 PDF 或 HTML，一律同時附上最終的 `.qmd` 原始檔（就是實際用來轉出報告的那一份），方便重現與修改。
+
 在需求中說明「要報告」「要 PDF」「要 HTML」即可。Skill 附有通用範本 `assets/report_template.qmd`，同一份 qmd 可輸出 PDF 與 HTML。選 Quarto 報告又沒指定格式時，預設輸出 PDF：
 
 | 格式 | 渲染指令 |
