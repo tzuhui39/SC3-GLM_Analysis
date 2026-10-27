@@ -176,8 +176,10 @@ glm-analysis/
     family-link-selection.md            依反應變數型態選 family 與 link
     diagnostics-checklist.md            模型診斷清單與判讀注意事項
     model-building-and-validation.md    研究目的、模型比較、診斷與預測表現
+    literature.md                       各方法對應的參考文獻（已查證）與引用鍵
   assets/
     report_template.qmd                 Quarto 報告範本（pdf、html 通用）
+    references.bib                      報告用的 BibTeX 文獻檔（與 literature.md 一致）
 ```
 
 `SKILL.md` 會在觸發時載入，`references/` 與 `assets/` 的內容則在需要時才讀取。

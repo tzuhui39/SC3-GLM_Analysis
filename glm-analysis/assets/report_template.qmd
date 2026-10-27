@@ -4,6 +4,7 @@ date: today
 author: ""
 toc: true
 number-sections: true
+bibliography: references.bib # 與 skill 的 assets/references.bib 相同，放在 qmd 同一資料夾
 execute:
   cache: true # 緩存；換資料後請加 --cache-refresh 重新執行
 format:
@@ -40,6 +41,8 @@ format:
 6. PDF 的中文字型會依序嘗試 Microsoft JhengHei UI、PingFang TC、Noto Sans CJK TC。
 8. 報告以台灣繁體中文撰寫，專有名詞第一次出現時附註英文，例如「過度離散（overdispersion）」；R 函式與套件名稱維持原文。
 7. 轉出後要實際檢查成品：希臘字母與數學符號是否顯示、表格有沒有重複的列名欄、圖有沒有缺字。
+9. 引用文獻：把 skill 的 assets/references.bib 複製到 qmd 同一資料夾，內文寫 [@nelder1972] 這類引用鍵（鍵值見 references/literature.md）。
+   只引用這次實際用到的方法；報告最後的「參考文獻」只會列出內文有引用的文獻。R 套件版本會變動的，用 toBibtex(citation("套件名")) 取得後加進 .bib。
 -->
 
 ```{r}
@@ -246,4 +249,9 @@ kable(data.frame(
 結論的所有估計值與診斷結果，都必須來自最終模型。若最終模型是 m1，就以 m1 的估計（@tbl-coef）為主要結論；若診斷後調整為 m2，就以 m2 為準。不要混用不同模型的結果而不交代，引用其他模型的數字時要標明是哪個模型、為什麼引用。在這裡給出最終結論與建議，並明講診斷通過不等於預測能力良好；若有報告樣本內配適指標（如 pseudo-R²），註明是樣本內、通常偏樂觀。
 
 寫圖形描述前，必須先實際查看圖（轉出報告後的圖也要看），不可憑印象下結論。寫完後逐句檢核：(1) 每個數字是否都來自最終模型？(2) 比較性陳述（較好、最佳、相近）是否有校正多重比較的檢定支持？(3) 有沒有出現因果措辭（本 skill 只描述關聯）？(4)「不顯著」有沒有被寫成「相同」？(5) 整體檢定是否用最終模型重做？內文的數學符號請用 LaTeX（例如 $\mu$、$\theta$），不要直接打 Unicode 符號。
+
+# 參考文獻 {.unnumbered}
+
+::: {#refs}
+:::
 

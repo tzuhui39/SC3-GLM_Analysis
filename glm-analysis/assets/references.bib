@@ -1,0 +1,512 @@
+% glm-analysis skill 的方法文獻（內容與 references/literature.md 一致，皆已查證）
+% 只放已查證的欄位；沒有查到的 DOI、期號不補寫。
+% 版本會變動的 R 套件（emmeans、DHARMa、R 本身等）不放在這裡：
+% 實際用到時，在 R 執行 toBibtex(citation("套件名")) 取得後，加到報告資料夾的這份 .bib。
+
+% 1. GLM 基本架構
+
+@article{nelder1972,
+  author  = {Nelder, J. A. and Wedderburn, R. W. M.},
+  title   = {Generalized Linear Models},
+  journal = {Journal of the Royal Statistical Society, Series A},
+  year    = {1972},
+  volume  = {135},
+  number  = {3},
+  pages   = {370--384},
+  doi     = {10.2307/2344614}
+}
+
+@book{mccullagh1989,
+  author    = {McCullagh, P. and Nelder, J. A.},
+  title     = {Generalized Linear Models},
+  edition   = {2},
+  publisher = {Chapman \& Hall},
+  year      = {1989},
+  isbn      = {9780412317606}
+}
+
+@book{agresti2013,
+  author    = {Agresti, Alan},
+  title     = {Categorical Data Analysis},
+  edition   = {3},
+  publisher = {Wiley},
+  year      = {2013},
+  isbn      = {9780470463635}
+}
+
+% 2. 二元資料
+
+@book{hosmer2013,
+  author    = {Hosmer, David W. and Lemeshow, Stanley and Sturdivant, Rodney X.},
+  title     = {Applied Logistic Regression},
+  edition   = {3},
+  publisher = {Wiley},
+  address   = {Hoboken, NJ},
+  year      = {2013},
+  isbn      = {9780470582473}
+}
+
+@article{zhang1998,
+  author  = {Zhang, J. and Yu, K. F.},
+  title   = {What's the Relative Risk? {A} Method of Correcting the Odds Ratio in Cohort Studies of Common Outcomes},
+  journal = {JAMA},
+  year    = {1998},
+  volume  = {280},
+  number  = {19},
+  pages   = {1690--1691},
+  note    = {PMID: 9832001}
+}
+
+@article{albert1984,
+  author  = {Albert, A. and Anderson, J. A.},
+  title   = {On the Existence of Maximum Likelihood Estimates in Logistic Regression Models},
+  journal = {Biometrika},
+  year    = {1984},
+  volume  = {71},
+  number  = {1},
+  pages   = {1--10}
+}
+
+@article{firth1993,
+  author  = {Firth, David},
+  title   = {Bias Reduction of Maximum Likelihood Estimates},
+  journal = {Biometrika},
+  year    = {1993},
+  volume  = {80},
+  pages   = {27--38}
+}
+
+@article{heinze2002,
+  author  = {Heinze, Georg and Schemper, Michael},
+  title   = {A Solution to the Problem of Separation in Logistic Regression},
+  journal = {Statistics in Medicine},
+  year    = {2002},
+  volume  = {21},
+  pages   = {2409--2419}
+}
+
+@article{peduzzi1996,
+  author  = {Peduzzi, P. and Concato, J. and Kemper, E. and Holford, T. R. and Feinstein, A. R.},
+  title   = {A Simulation Study of the Number of Events per Variable in Logistic Regression Analysis},
+  journal = {Journal of Clinical Epidemiology},
+  year    = {1996},
+  volume  = {49},
+  pages   = {1373--1379},
+  doi     = {10.1016/S0895-4356(96)00236-3}
+}
+
+@article{vansmeden2016,
+  author  = {{van Smeden}, Maarten and {de Groot}, Joris A. H. and Moons, Karel G. M. and Collins, Gary S. and Altman, Douglas G. and Eijkemans, Marinus J. C. and Reitsma, Johannes B.},
+  title   = {No Rationale for 1 Variable per 10 Events Criterion for Binary Logistic Regression Analysis},
+  journal = {BMC Medical Research Methodology},
+  year    = {2016},
+  volume  = {16},
+  pages   = {163},
+  doi     = {10.1186/s12874-016-0267-3}
+}
+
+% 3. cloglog 與離散時間事件
+
+@article{prentice1978,
+  author  = {Prentice, R. L. and Gloeckler, L. A.},
+  title   = {Regression Analysis of Grouped Survival Data with Application to Breast Cancer Data},
+  journal = {Biometrics},
+  year    = {1978},
+  volume  = {34},
+  pages   = {57--67},
+  doi     = {10.2307/2529588}
+}
+
+% 4. 計數資料
+
+@article{wedderburn1974,
+  author  = {Wedderburn, R. W. M.},
+  title   = {Quasi-Likelihood Functions, Generalized Linear Models, and the {Gauss--Newton} Method},
+  journal = {Biometrika},
+  year    = {1974},
+  volume  = {61},
+  number  = {3},
+  pages   = {439--447},
+  doi     = {10.1093/biomet/61.3.439}
+}
+
+@article{cameron1990,
+  author  = {Cameron, A. Colin and Trivedi, Pravin K.},
+  title   = {Regression-Based Tests for Overdispersion in the {Poisson} Model},
+  journal = {Journal of Econometrics},
+  year    = {1990},
+  volume  = {46},
+  number  = {3},
+  pages   = {347--364}
+}
+
+@article{lawless1987,
+  author  = {Lawless, Jerald F.},
+  title   = {Negative Binomial and Mixed {Poisson} Regression},
+  journal = {The Canadian Journal of Statistics},
+  year    = {1987},
+  volume  = {15},
+  number  = {3},
+  pages   = {209--225}
+}
+
+@article{verhoef2007,
+  author  = {{Ver Hoef}, Jay M. and Boveng, Peter L.},
+  title   = {Quasi-{Poisson} vs. Negative Binomial Regression: How Should We Model Overdispersed Count Data?},
+  journal = {Ecology},
+  year    = {2007},
+  volume  = {88},
+  number  = {11},
+  pages   = {2766--2772}
+}
+
+@book{venables2002,
+  author    = {Venables, W. N. and Ripley, B. D.},
+  title     = {Modern Applied Statistics with {S}},
+  edition   = {4},
+  publisher = {Springer},
+  year      = {2002},
+  isbn      = {0-387-95457-0}
+}
+
+@book{gelman2007,
+  author    = {Gelman, Andrew and Hill, Jennifer},
+  title     = {Data Analysis Using Regression and Multilevel/Hierarchical Models},
+  publisher = {Cambridge University Press},
+  year      = {2007},
+  doi       = {10.1017/CBO9780511790942}
+}
+
+@article{fisher1950,
+  author  = {Fisher, R. A.},
+  title   = {The Significance of Deviations from Expectation in a {Poisson} Series},
+  journal = {Biometrics},
+  year    = {1950},
+  volume  = {6},
+  pages   = {17--24}
+}
+
+% 5. 零膨脹與門檻模型
+
+@article{lambert1992,
+  author  = {Lambert, Diane},
+  title   = {Zero-Inflated {Poisson} Regression, with an Application to Defects in Manufacturing},
+  journal = {Technometrics},
+  year    = {1992},
+  volume  = {34},
+  number  = {1},
+  pages   = {1--14}
+}
+
+@article{mullahy1986,
+  author  = {Mullahy, John},
+  title   = {Specification and Testing of Some Modified Count Data Models},
+  journal = {Journal of Econometrics},
+  year    = {1986},
+  volume  = {33},
+  number  = {3},
+  pages   = {341--365},
+  doi     = {10.1016/0304-4076(86)90002-3}
+}
+
+% 6. 比例資料與相關觀測
+
+@article{ferrari2004,
+  author  = {Ferrari, Silvia and Cribari-Neto, Francisco},
+  title   = {Beta Regression for Modelling Rates and Proportions},
+  journal = {Journal of Applied Statistics},
+  year    = {2004},
+  volume  = {31},
+  number  = {7},
+  pages   = {799--815},
+  doi     = {10.1080/0266476042000214501}
+}
+
+@article{liang1986,
+  author  = {Liang, Kung-Yee and Zeger, Scott L.},
+  title   = {Longitudinal Data Analysis Using Generalized Linear Models},
+  journal = {Biometrika},
+  year    = {1986},
+  volume  = {73},
+  number  = {1},
+  pages   = {13--22}
+}
+
+@article{breslow1993,
+  author  = {Breslow, N. E. and Clayton, D. G.},
+  title   = {Approximate Inference in Generalized Linear Mixed Models},
+  journal = {Journal of the American Statistical Association},
+  year    = {1993},
+  volume  = {88},
+  pages   = {9--25},
+  doi     = {10.2307/2290687}
+}
+
+% 7. 殘差與診斷圖
+
+@article{pierce1986,
+  author  = {Pierce, Donald A. and Schafer, Daniel W.},
+  title   = {Residuals in Generalized Linear Models},
+  journal = {Journal of the American Statistical Association},
+  year    = {1986},
+  volume  = {81},
+  pages   = {977--986}
+}
+
+@book{cook1982,
+  author    = {Cook, R. Dennis and Weisberg, Sanford},
+  title     = {Residuals and Influence in Regression},
+  publisher = {Chapman and Hall},
+  address   = {New York},
+  year      = {1982},
+  isbn      = {0-412-24280-0},
+  url       = {https://hdl.handle.net/11299/37076}
+}
+
+@article{dunn1996,
+  author  = {Dunn, Peter K. and Smyth, Gordon K.},
+  title   = {Randomized Quantile Residuals},
+  journal = {Journal of Computational and Graphical Statistics},
+  year    = {1996},
+  volume  = {5},
+  number  = {3},
+  pages   = {236--244},
+  doi     = {10.1080/10618600.1996.10474708}
+}
+
+% 8. 共線性
+
+@article{fox1992,
+  author  = {Fox, John and Monette, Georges},
+  title   = {Generalized Collinearity Diagnostics},
+  journal = {Journal of the American Statistical Association},
+  year    = {1992},
+  volume  = {87},
+  number  = {417},
+  pages   = {178--183},
+  url     = {https://www.jstor.org/stable/2290467}
+}
+
+@book{fox2019,
+  author    = {Fox, John and Weisberg, Sanford},
+  title     = {An {R} Companion to Applied Regression},
+  edition   = {3},
+  publisher = {Sage},
+  address   = {Thousand Oaks, CA},
+  year      = {2019},
+  url       = {https://www.john-fox.ca/Companion/}
+}
+
+% 9. 模型比較
+
+@article{wilks1938,
+  author  = {Wilks, S. S.},
+  title   = {The Large-Sample Distribution of the Likelihood Ratio for Testing Composite Hypotheses},
+  journal = {The Annals of Mathematical Statistics},
+  year    = {1938},
+  volume  = {9},
+  pages   = {60--62}
+}
+
+@article{akaike1974,
+  author  = {Akaike, Hirotugu},
+  title   = {A New Look at the Statistical Model Identification},
+  journal = {IEEE Transactions on Automatic Control},
+  year    = {1974},
+  volume  = {19},
+  number  = {6},
+  pages   = {716--723},
+  doi     = {10.1109/TAC.1974.1100705}
+}
+
+@article{schwarz1978,
+  author  = {Schwarz, Gideon},
+  title   = {Estimating the Dimension of a Model},
+  journal = {The Annals of Statistics},
+  year    = {1978},
+  volume  = {6},
+  number  = {2},
+  pages   = {461--464},
+  doi     = {10.1214/aos/1176344136}
+}
+
+@book{burnham2002,
+  author    = {Burnham, Kenneth P. and Anderson, David R.},
+  title     = {Model Selection and Multimodel Inference: A Practical Information-Theoretic Approach},
+  edition   = {2},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {2002},
+  doi       = {10.1007/b97636}
+}
+
+% 10. pseudo-R2
+
+@article{tjur2009,
+  author  = {Tjur, Tue},
+  title   = {Coefficients of Determination in Logistic Regression Models---A New Proposal: The Coefficient of Discrimination},
+  journal = {The American Statistician},
+  year    = {2009},
+  volume  = {63},
+  number  = {4},
+  pages   = {366--372},
+  doi     = {10.1198/tast.2009.08210}
+}
+
+@article{nagelkerke1991,
+  author  = {Nagelkerke, N. J. D.},
+  title   = {A Note on a General Definition of the Coefficient of Determination},
+  journal = {Biometrika},
+  year    = {1991},
+  volume  = {78},
+  pages   = {691--692}
+}
+
+% 11. 估計邊際平均與多重比較
+
+@article{searle1980,
+  author  = {Searle, S. R. and Speed, F. M. and Milliken, G. A.},
+  title   = {Population Marginal Means in the Linear Model: An Alternative to Least Squares Means},
+  journal = {The American Statistician},
+  year    = {1980},
+  volume  = {34},
+  number  = {4},
+  pages   = {216--221},
+  doi     = {10.1080/00031305.1980.10483031}
+}
+
+@book{hsu1996,
+  author    = {Hsu, Jason C.},
+  title     = {Multiple Comparisons: Theory and Methods},
+  publisher = {Chapman \& Hall},
+  address   = {London},
+  year      = {1996},
+  isbn      = {9780412982811}
+}
+
+@article{dunnett1955,
+  author  = {Dunnett, Charles W.},
+  title   = {A Multiple Comparison Procedure for Comparing Several Treatments with a Control},
+  journal = {Journal of the American Statistical Association},
+  year    = {1955},
+  volume  = {50},
+  pages   = {1096--1121}
+}
+
+% 12. 不顯著不等於相同、等效性
+
+@article{altman1995,
+  author  = {Altman, Douglas G. and Bland, J. Martin},
+  title   = {Statistics Notes: Absence of Evidence Is Not Evidence of Absence},
+  journal = {BMJ},
+  year    = {1995},
+  volume  = {311},
+  number  = {7003},
+  pages   = {485},
+  doi     = {10.1136/bmj.311.7003.485}
+}
+
+@article{schuirmann1987,
+  author  = {Schuirmann, Donald J.},
+  title   = {A Comparison of the Two One-Sided Tests Procedure and the Power Approach for Assessing the Equivalence of Average Bioavailability},
+  journal = {Journal of Pharmacokinetics and Biopharmaceutics},
+  year    = {1987},
+  volume  = {15},
+  pages   = {657--680},
+  doi     = {10.1007/BF01068419}
+}
+
+% 13. 缺失值
+
+@article{rubin1976,
+  author  = {Rubin, Donald B.},
+  title   = {Inference and Missing Data},
+  journal = {Biometrika},
+  year    = {1976},
+  volume  = {63},
+  number  = {3},
+  pages   = {581--592}
+}
+
+@book{little2019,
+  author    = {Little, Roderick J. A. and Rubin, Donald B.},
+  title     = {Statistical Analysis with Missing Data},
+  edition   = {3},
+  publisher = {Wiley},
+  year      = {2019},
+  isbn      = {9780470526798}
+}
+
+% 14. 樣本外預測評估
+
+@book{hastie2009,
+  author    = {Hastie, Trevor and Tibshirani, Robert and Friedman, Jerome},
+  title     = {The Elements of Statistical Learning: Data Mining, Inference, and Prediction},
+  edition   = {2},
+  publisher = {Springer},
+  year      = {2009},
+  isbn      = {9780387848570}
+}
+
+@article{roberts2017,
+  author  = {Roberts, David R. and Bahn, Volker and Ciuti, Simone and Boyce, Mark S. and Elith, Jane and Guillera-Arroita, Gurutzeta and Hauenstein, Severin and Lahoz-Monfort, José J. and Schroeder, Boris and Thuiller, Wilfried and Warton, David I. and Wintle, Brendan A. and Hartig, Florian and Dormann, Carsten F.},
+  title   = {Cross-Validation Strategies for Data with Temporal, Spatial, Hierarchical, or Phylogenetic Structure},
+  journal = {Ecography},
+  year    = {2017},
+  volume  = {40},
+  pages   = {913--929}
+}
+
+@article{hanley1982,
+  author  = {Hanley, James A. and McNeil, Barbara J.},
+  title   = {The Meaning and Use of the Area under a Receiver Operating Characteristic ({ROC}) Curve},
+  journal = {Radiology},
+  year    = {1982},
+  volume  = {143},
+  number  = {1},
+  pages   = {29--36}
+}
+
+@article{brier1950,
+  author  = {Brier, Glenn W.},
+  title   = {Verification of Forecasts Expressed in Terms of Probability},
+  journal = {Monthly Weather Review},
+  year    = {1950},
+  volume  = {78},
+  number  = {1},
+  pages   = {1--3}
+}
+
+@article{vancalster2019,
+  author  = {{Van Calster}, Ben and McLernon, David J. and {van Smeden}, Maarten and Wynants, Laure and Steyerberg, Ewout W. and {Topic Group 'Evaluating diagnostic tests and prediction models' of the STRATOS initiative}},
+  title   = {Calibration: The {Achilles} Heel of Predictive Analytics},
+  journal = {BMC Medicine},
+  year    = {2019},
+  volume  = {17},
+  number  = {1},
+  pages   = {230},
+  doi     = {10.1186/s12916-019-1466-7}
+}
+
+% 15. 軟體（版本固定、可直接引用者）
+
+@article{ludecke2021,
+  author  = {Lüdecke, Daniel and Ben-Shachar, Mattan S. and Patil, Indrajeet and Waggoner, Philip and Makowski, Dominique},
+  title   = {{performance}: An {R} Package for Assessment, Comparison and Testing of Statistical Models},
+  journal = {Journal of Open Source Software},
+  year    = {2021},
+  volume  = {6},
+  number  = {60},
+  pages   = {3139},
+  doi     = {10.21105/joss.03139}
+}
+
+@book{wickham2016,
+  author    = {Wickham, Hadley},
+  title     = {{ggplot2}: Elegant Graphics for Data Analysis},
+  publisher = {Springer-Verlag},
+  address   = {New York},
+  year      = {2016},
+  isbn      = {978-3-319-24277-4},
+  url       = {https://ggplot2.tidyverse.org}
+}
