@@ -5126,7 +5126,7 @@ window.Quarto = {
   <li><a href="#修正-6要求-ai-實際測試" id="toc-修正-6要求-ai-實際測試" class="nav-link" data-scroll-target="#修正-6要求-ai-實際測試"><span class="header-section-number">2.11</span> 修正 6：要求 AI 實際測試</a></li>
   <li><a href="#修正-7增加預測新資料" id="toc-修正-7增加預測新資料" class="nav-link" data-scroll-target="#修正-7增加預測新資料"><span class="header-section-number">2.12</span> 修正 7：增加「預測新資料」</a></li>
   <li><a href="#修正-8輸出格式更單純" id="toc-修正-8輸出格式更單純" class="nav-link" data-scroll-target="#修正-8輸出格式更單純"><span class="header-section-number">2.13</span> 修正 8：輸出格式更單純</a></li>
-  <li><a href="#修正-9連續變數只用線性項" id="toc-修正-9連續變數只用線性項" class="nav-link" data-scroll-target="#修正-9連續變數只用線性項"><span class="header-section-number">2.14</span> 修正 9：連續變數只用線性項</a></li>
+  <li><a href="#修正-9解釋變數先用一次項" id="toc-修正-9解釋變數先用一次項" class="nav-link" data-scroll-target="#修正-9解釋變數先用一次項"><span class="header-section-number">2.14</span> 修正 9：解釋變數先用一次項</a></li>
   <li><a href="#修正-10先看圖再描述" id="toc-修正-10先看圖再描述" class="nav-link" data-scroll-target="#修正-10先看圖再描述"><span class="header-section-number">2.15</span> 修正 10：先看圖，再描述</a></li>
   <li><a href="#發布放上-github" id="toc-發布放上-github" class="nav-link" data-scroll-target="#發布放上-github"><span class="header-section-number">2.16</span> 發布：放上 GitHub</a></li>
   <li><a href="#現在的-skill-怎麼運作" id="toc-現在的-skill-怎麼運作" class="nav-link" data-scroll-target="#現在的-skill-怎麼運作"><span class="header-section-number">2.17</span> 現在的 Skill 怎麼運作？</a></li>
@@ -5503,8 +5503,8 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <p>1.範本有一個錯誤……<code>showtext::font_add()</code>，但這個函式其實屬於 <code>sysfonts</code> 套件，所以第一次渲染直接報錯……</p>
-<p>2. 如果在對話裡輸出 我沒叫你給我R CODE不用給我</p>
-<p>3. 在對話裡做EDA的時候 做完以後先讓使用者確認資料是否有問題(尤其最大最小值) 可能TYPO或奇怪的數值 使用者說資料沒問題就繼續下一步</p>
+<p>2. 如果在對話裡輸出，我沒叫你給我R CODE不用給我。</p>
+<p>3. 在對話裡做EDA的時候， 做完以後先讓使用者確認資料是否有問題(尤其最大最小值) 可能TYPO或奇怪的數值， 使用者說資料沒問題就繼續下一步。</p>
 </div>
 </div>
 <ul>
@@ -5525,7 +5525,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>模型的部分 一開始只提供一個模型就好 不用一開始就烈很多候選模型，除非使用者有要求</p>
+<p>模型的部分，一開始只提供一個模型就好， 不用一開始就列很多候選模型，除非使用者有要求。</p>
 </div>
 </div>
 <ul>
@@ -5547,7 +5547,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>如果需要使用者進行選擇請進行check box 不要完整停下需要使用者在對話框回應，會讓人誤會已經結束了，另外不要預設在對話裡進行分析 再問完使用者所有問題以後讓使用這進行決定要在對話還是製作quarto</p>
+<p>如果需要使用者進行選擇請進行check box， 不要完整停下需要使用者在對話框回應，會讓人誤會已經結束了，另外不要預設在對話裡進行分析， 在問完使用者所有問題以後讓使用這進行決定要在對話還是製作quarto。</p>
 </div>
 </div>
 <ul>
@@ -5572,7 +5572,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>你可以實際跑一個資料測試 有無符合這個skill應該要有的流程與邏輯與敘述</p>
+<p>你可以實際跑一個資料測試， 有無符合這個skill應該要有的流程與邏輯與敘述。</p>
 </div>
 </div>
 <ul>
@@ -5597,7 +5597,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>如果解釋關聯以後使用者要拿最中模型來預測新資料的話也可以，不用重新繞回重TRAIN資料</p>
+<p>如果解釋關聯以後使用者要拿最終模型來預測新資料的話也可以，不用重新繞回重TRAIN模型。</p>
 </div>
 </div>
 <ul>
@@ -5617,7 +5617,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>刪除輸出格式有docx 預設quarto 輸出pdf 要把code打開，html目前有用程式碼可以摺疊 這部分保留</p>
+<p>刪除輸出格式有docx，預設quarto輸出pdf 要把code打開，保留html目前可以摺疊程式碼。</p>
 </div>
 </div>
 <ul>
@@ -5626,8 +5626,8 @@ window.Quarto = {
 <li>HTML 保留程式碼摺疊（<code>code-fold: true</code>），讀者需要時再展開</li>
 </ul>
 </section>
-<section id="修正-9連續變數只用線性項" class="level2" data-number="2.14">
-<h2 data-number="2.14" class="anchored" data-anchor-id="修正-9連續變數只用線性項"><span class="header-section-number">2.14</span> 修正 9：連續變數只用線性項</h2>
+<section id="修正-9解釋變數先用一次項" class="level2" data-number="2.14">
+<h2 data-number="2.14" class="anchored" data-anchor-id="修正-9解釋變數先用一次項"><span class="header-section-number">2.14</span> 修正 9：解釋變數先用一次項</h2>
 <div class="callout callout-style-default callout-note callout-titled" title="我說">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -5638,11 +5638,11 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>我不喜歡一開始模型就配置 解釋參數是非線性的(比如二次方 等等) 除非後續模型不好 才可以在報告裡延伸討論說之後可以改非線性，請刪掉skill這個部分以及後續相關檢定</p>
+<p>我不喜歡一開始模型就配置 解釋變數是二次方..等 ，除非後續模型不好， 才可以在報告裡延伸討論說之後可以改非線性，請刪掉skill這個部分以及後續相關檢定</p>
 </div>
 </div>
 <ul>
-<li>連續解釋變數<strong>一律以線性項放入</strong>，不一開始配適二次方、多項式或樣條</li>
+<li>連續解釋變數<strong>預設以一次項納入</strong>，不一開始配適二次方、多項式或樣條</li>
 <li>刪除挑選函數形式的分組趨勢圖與相關檢定</li>
 <li>診斷時殘差對某個變數呈現曲線，<strong>不自行加入非線性項</strong>，只在報告中描述，列為「後續可考慮改用非線性形式」的延伸討論</li>
 <li>模型簡單、係數好解釋，也避免嘗試很多形式再挑最好看的</li>
@@ -5660,7 +5660,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>寫模型診斷或是 需要任何對圖片進行描述或結論前 必須要先查看圖長怎樣 不可以憑感覺、印象就下結論</p>
+<p>寫模型診斷、需要任何對圖片進行描述或結論前 必須要先查看圖長怎樣，不可以憑感覺、印象就下結論。</p>
 </div>
 </div>
 <ul>
