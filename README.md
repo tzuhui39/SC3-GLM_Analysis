@@ -162,10 +162,12 @@ flowchart TD
 把整個 `glm-analysis` 資料夾放到：
 
 ```
-~/.claude/skills/glm-analysis/
+~/.claude/skills/
 ```
 
-專案內使用則放在專案的 `.claude/skills/glm-analysis/`。
+專案內使用則放到專案的 `.claude/skills/`。
+
+放好之後，`SKILL.md` 的路徑應該是 `~/.claude/skills/glm-analysis/SKILL.md`。放的是裡面的 `glm-analysis` 資料夾，不是整個 GitHub 專案資料夾，否則會多包一層，Claude Code 找不到。
 
 ## 資料夾結構
 
