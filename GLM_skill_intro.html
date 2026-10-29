@@ -5693,7 +5693,7 @@ window.Quarto = {
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart TD
-    A[&quot;列出變數&lt;br&gt;勾選確認 X / Y&quot;] --&gt; B[&quot;確認研究目的與時間順序&quot;]
+    A[&quot;列出變數&lt;br&gt;勾選確認 X / Y&quot;] --&gt; B[&quot;確認變數的時間順序&quot;]
     B --&gt; C[&quot;EDA&quot;]
     C --&gt; D[&quot;資料檢查關卡&lt;br&gt;確認最大最小值、typo&quot;]
     D --&gt;|&quot;有問題&quot;| D1[&quot;修正或排除後重新檢查&quot;]
@@ -5751,9 +5751,10 @@ window.Quarto = {
 </ol>
 <p><strong>Claude Code</strong></p>
 <ul>
-<li>把整個 <code>glm-analysis</code> 資料夾放到 <code>~/.claude/skills/glm-analysis/</code></li>
-<li>只在某個專案使用時，放在該專案的 <code>.claude/skills/glm-analysis/</code></li>
+<li>把整個 <code>glm-analysis</code> 資料夾放到 <code>~/.claude/skills/</code></li>
+<li>只在某個專案使用時，放在該專案的 <code>.claude/skills/</code></li>
 </ul>
+<p>放好之後，<code>SKILL.md</code> 的路徑應該是 <code>~/.claude/skills/glm-analysis/SKILL.md</code>。放的是裡面的 <code>glm-analysis</code> 資料夾，不是整個 GitHub 專案資料夾，否則會多包一層，Claude Code 找不到。</p>
 </section>
 <section id="補充claude-如何執行-r" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="補充claude-如何執行-r"><span class="header-section-number">3.2</span> 補充：Claude 如何執行 R？</h2>
